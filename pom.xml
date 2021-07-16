@@ -63,6 +63,41 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>-->
+
+
+		<!-- standard validation APIs -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.0.Final</version>
+		</dependency>
+		<!-- Hibernate Validator is the reference implementation of the validation API
+             is entirely separate from the persistence aspects of Hibernate and by adding it as a dependency, we're not adding these persistence aspects into the project. -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.2.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>6.0.2.Final</version>
+		</dependency>
+
+		<!-- JSR 380 provides support for variable interpolation, allowing expressions inside the violation messages.
+            To parse these expressions, we must add a dependency on both the expression language API and an implementation of that API. GlassFish provides the reference implementation -->
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>2.2.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
