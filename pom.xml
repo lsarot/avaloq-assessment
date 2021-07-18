@@ -18,36 +18,24 @@
 		<java.version>11</java.version>
 	</properties>
 
+	<repositories>
+		<!-- springfox-swagger -->
+		<repository>
+			<id>jcenter-snapshots</id>
+			<name>jcenter</name>
+			<!--<url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>--><!--snapshot-->
+			<url>https://jcenter.bintray.com/</url><!--release-->
+		</repository>
+	</repositories>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
 
-		<!-- Rest -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
-		</dependency>
+		<!-- ........................................... PERSISTENCE ............................................... -->
 
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
-
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>-->
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>-->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -55,22 +43,29 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- .............................................. TESTS .................................................. -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>-->
-		<!--<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>-->
 
+		<!-- ..................... COMMUNICATIONS: WEB SERVICES, WEB SOCKETS, RSOCKETS, ETC ........................ -->
+
+		<!-- Swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- .................................... BEAN VALIDATION (JSR-380) ........................................ -->
 
 		<!-- standard validation APIs -->
 		<dependency>
@@ -90,7 +85,6 @@
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
 			<version>6.0.2.Final</version>
 		</dependency>
-
 		<!-- JSR 380 provides support for variable interpolation, allowing expressions inside the violation messages.
             To parse these expressions, we must add a dependency on both the expression language API and an implementation of that API. GlassFish provides the reference implementation -->
 		<dependency>
@@ -103,6 +97,8 @@
 			<artifactId>javax.el</artifactId>
 			<version>2.2.6</version>
 		</dependency>
+
+		<!-- .......................................... UNCLASSIFIED ............................................... -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -1,13 +1,9 @@
 package com.leonardo.demos.avaloqassessment.controller.rest;
 
 import com.leonardo.demos.avaloqassessment.model.dto.Dice;
-import com.leonardo.demos.avaloqassessment.model.persistence.entity.Roll;
 import com.leonardo.demos.avaloqassessment.model.persistence.entity.Simulation;
-import com.leonardo.demos.avaloqassessment.model.persistence.repository.RollRepository;
-import com.leonardo.demos.avaloqassessment.model.persistence.repository.SimulationRepository;
 import com.leonardo.demos.avaloqassessment.service.SimulatorSvc;
-import com.leonardo.demos.avaloqassessment.service.ValidatorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.leonardo.demos.avaloqassessment.service.ValidatorSvc;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,16 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dice/v1/simulations")
 public class SimulationController {
 
 
-    @Autowired ValidatorService validatorService;
+    private ValidatorSvc validatorSvc;
 
-    @Autowired SimulatorSvc simulatorSvc;
+    private SimulatorSvc simulatorSvc;
+
+
+    public SimulationController(ValidatorSvc validatorSvc, SimulatorSvc simulatorSvc) {
+        this.validatorSvc = validatorSvc;
+        this.simulatorSvc = simulatorSvc;
+    }
 
 
     /**
@@ -33,6 +34,9 @@ public class SimulationController {
      * a. For every roll sum the rolled number from the dice (the result will be between 3 and 18).
      * b. Count how many times each total has been rolled.
      * c. Return this as a JSON structure.
+     *
+     *
+     * THIS ONE DOES NOT STORE ON DDBB
      * */
     @GetMapping("/sim-default")
     public ResponseEntity simulationDefault() {
@@ -89,62 +93,20 @@ public class SimulationController {
                 totalPieces,
                 totalRolls);
 
-        List<String> violationMsgs = validatorService.validate(dice, simulation);
+        Set<String> violationMsgs = validatorSvc.validate(dice, simulation);
         if (violationMsgs.size() > 0)
             return ResponseEntity.badRequest().body(violationMsgs);
 
-        Map<Integer,Integer> results = simulatorSvc.runSimulation(simulation);
+        Map<Long,Long> results = simulatorSvc.runSimulation(simulation);
 
         return ResponseEntity.ok(results);
     }
-
-
-    /**
-     * 1. Return the total number of simulations and total rolls made,
-     * grouped by all existing dice number–dice side combinations.
-     * a. Eg. if there were two calls to the REST endpoint for 3 pieces of 6 sided dice, once with a total number of
-     * rolls of 100 and once with a total number of rolls of 200, then there were a total of 2 simulations, with a
-     * total of 300 rolls for this combination.
-     */
-    @GetMapping("/stats-grouped")
-    public ResponseEntity getSimulationsGrouped() {
-
-        return ResponseEntity.ok(simulatorSvc.getSimulationsGrouped());
-    }
-
-
-    /**
-     * 2. For a given dice number–dice side combination, return the relative distribution,
-     * compared to the total rolls, for all the simulations.
-     * In case of a total of 300 rolls,
-     * a. If the sum „3” was rolled 4 times, that would be 1.33%.
-     * b. If the sum „4” was rolled 3 times, that would be 1%.
-     * c. If the total „5” was rolled 11 times, that would be 3.66%. Etc...
-     * */
-    public ResponseEntity getRelativeDistribution(
-            @RequestParam(required = false, name = "dn") Long totalPieces,
-            @RequestParam(required = false, name = "ds") Long totalSidesPerDice
-    ) {
-
-        return ResponseEntity.ok(
-                simulatorSvc.getRelativeDistributionForCombination(
-                        totalPieces, totalSidesPerDice));
-    }
-
 
 
     @GetMapping("/all")
     public ResponseEntity getSimulations() {
 
         List<Simulation> list = simulatorSvc.getAllSimulations();
-        return ResponseEntity.ok(list);
-    }
-
-
-    @GetMapping("/rolls/all")
-    public ResponseEntity getRolls() {
-
-        List<Roll> list = simulatorSvc.getAllRolls();
         return ResponseEntity.ok(list);
     }
 

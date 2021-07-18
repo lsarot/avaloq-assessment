@@ -1,29 +1,35 @@
 package com.leonardo.demos.avaloqassessment.service;
 
 import com.leonardo.demos.avaloqassessment.model.dto.Dice;
-import com.leonardo.demos.avaloqassessment.model.dto.SimulationStats;
 import com.leonardo.demos.avaloqassessment.model.persistence.entity.Roll;
 import com.leonardo.demos.avaloqassessment.model.persistence.entity.RollPK;
 import com.leonardo.demos.avaloqassessment.model.persistence.entity.Simulation;
-import com.leonardo.demos.avaloqassessment.model.persistence.repository.RollRepository;
-import com.leonardo.demos.avaloqassessment.model.persistence.repository.SimulationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.leonardo.demos.avaloqassessment.model.persistence.dao.RollDao;
+import com.leonardo.demos.avaloqassessment.model.persistence.dao.SimulationDao;
+import com.leonardo.demos.avaloqassessment.model.persistence.repository.SimulationsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SimulatorSvc {
-    
-    @Autowired SimulationRepository simulationRepository;
 
-    @Autowired RollRepository rollRepository;
+    private SimulationsRepository simulationsRepository;
+
+    private SimulationDao simulationDao;
+
+    private RollDao rollDao;
+
+
+    public SimulatorSvc(SimulationsRepository simulationsRepository, SimulationDao simulationDao, RollDao rollDao) {
+        this.simulationsRepository = simulationsRepository;
+        this.simulationDao = simulationDao;
+        this.rollDao = rollDao;
+    }
 
 
     public Map runSimulation(Simulation simulation) {
-
-        simulationRepository.save(simulation);
 
         Map<Long,Long> results = new TreeMap<>();
         Dice dice = new Dice(simulation.getSides());
@@ -47,47 +53,37 @@ public class SimulatorSvc {
             rolls.add(roll);
         });
 
-        rollRepository.saveAll(rolls);
+        saveSimulationAndRolls(simulation, rolls);
 
         return results;
     }
 
 
-    public List<SimulationStats> getSimulationsGrouped() {
-
-        List<Simulation> list = simulationRepository.getSimulationGrouped();
-        List<SimulationStats> stats = list.stream().map(sim -> new SimulationStats(
-                sim.getDice(),
-                sim.getSides(),
-                sim.getTimestamp(),
-                sim.getRolls()))
-                .collect(Collectors.toList());
-        return stats;
+    @Transactional
+    private void saveSimulationAndRolls(Simulation sim, List<Roll> rolls) {
+        simulationDao.save(sim);
+        rollDao.saveAll(rolls);
     }
 
 
     public List<Simulation> getAllSimulations() {
-        return simulationRepository.getAll();
+        return simulationDao.getAll(); //also simulationDao.findAll()
     }
 
 
     public List<Roll> getAllRolls() {
-        return rollRepository.getAll();
+        return rollDao.getAll();
     }
 
 
-    public Map getRelativeDistributionForCombination(long dice, long sides) {
+    public List getSimulationsGrouped() {
 
-        long rollsTotalCount = rollRepository.getTotalRollsCountForCombination(sides, dice);
+        return simulationsRepository.getSimulationsGrouped();
+    }
 
-        List<Roll> rolls = rollRepository.getRollsByCombination(sides, dice);
 
-        Map<Long,Float> stats = new HashMap<>();
+    public List getRelativeDistributionForCombination(long dice, long sides) {
 
-        rolls.forEach(roll -> {
-            stats.put(roll.getRollPK().getRollSum(), 100f*roll.getCount()/rollsTotalCount);
-        });
-
-        return stats;
+        return simulationsRepository.getRollsByCombination(dice, sides);
     }
 }

@@ -1,0 +1,14 @@
+version: '3.8'
+
+# docker compose up --build --force-recreate
+# docker compose down
+
+services:
+  simulation-server:
+    container_name: avaloq-test-leo
+    image: avaloq-test-leo
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '8081:8080'

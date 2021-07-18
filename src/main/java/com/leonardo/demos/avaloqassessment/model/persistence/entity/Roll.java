@@ -9,6 +9,7 @@ public class Roll {
     @EmbeddedId
     protected RollPK rollPK;
 
+    @Column(name = "qty")
     private Long count;
 
     public Roll() {

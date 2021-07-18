@@ -1,22 +1,21 @@
 package com.leonardo.demos.avaloqassessment.configuration.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Primary;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+@EnableTransactionManagement
 @Configuration
 public class DataSourceConfig {
 
-    @Autowired private Environment env;
 
-
+    @Primary
     @Bean("MyDataSource")
-    public DataSource configureH2DataSource_2() {
+    public DataSource configureH2DataSource() {
 
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl("jdbc:h2:mem:avaloqsim;DB_CLOSE_DELAY=-1;INIT=runscript from 'classpath:/db_schema.sql'");

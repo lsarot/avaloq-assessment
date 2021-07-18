@@ -3,6 +3,7 @@ package com.leonardo.demos.avaloqassessment.model.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class RollPK implements Serializable {
@@ -38,5 +39,19 @@ public class RollPK implements Serializable {
 
     public void setRollSum(Long rollSum) {
         this.rollSum = rollSum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RollPK)) return false;
+        RollPK rollPK = (RollPK) o;
+        return getTimestamp().equals(rollPK.getTimestamp()) &&
+                getRollSum().equals(rollPK.getRollSum());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTimestamp(), getRollSum());
     }
 }

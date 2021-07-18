@@ -6,30 +6,30 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ValidatorService {
+public class ValidatorSvc {
 
 
-    public List<String> validate(Object... objects) {
+    public Set<String> validate(Object... objects) {
 
-        List<String> violationMsgs = Collections.emptyList();
+        Set<String> violationMsgs = Collections.emptySet();
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        Set<ConstraintViolation<Object>> violations = new HashSet<>();
+        List<ConstraintViolation<Object>> violations = new ArrayList<>();
 
         for (Object o : objects) {
             violations.addAll(validator.validate(o));
         }
 
         if (violations.size() > 0) {
-            violationMsgs = violations.stream().map(v -> v.getMessage()).collect(Collectors.toList());
+            violationMsgs = violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet());
         }
 
         return violationMsgs;

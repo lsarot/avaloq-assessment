@@ -1,8 +1,8 @@
---drop table if exists simulation;
---drop table if exists sums;
+drop table if exists ROLL;
+drop table if exists SIMULATION;
 
 
-create table simulation(
+create table IF NOT EXISTS SIMULATION(
     time_stamp numeric,
     rolls numeric,
     sides numeric,
@@ -10,7 +10,7 @@ create table simulation(
     constraint pk_sim primary key (time_stamp)
 );
 
-create table roll(
+create table IF NOT EXISTS ROLL(
     time_stamp numeric,
     roll_sum numeric,
     qty numeric,

@@ -1,8 +1,8 @@
-package com.leonardo.demos.avaloqassessment.model.dto;
+package com.leonardo.demos.avaloqassessment.model.dto.stats;
 
 import java.io.Serializable;
 
-public class SimulationStats implements Serializable {
+public class SimulationsGrouped implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -11,10 +11,10 @@ public class SimulationStats implements Serializable {
     private long totalNbrSimulations;
     private long totalRollsMade;
 
-    public SimulationStats() {
+    public SimulationsGrouped() {
     }
 
-    public SimulationStats(long dice, long sides, long totalNbrSimulations, long totalRollsMade) {
+    public SimulationsGrouped(long dice, long sides, long totalNbrSimulations, long totalRollsMade) {
         this.dice = dice;
         this.sides = sides;
         this.totalNbrSimulations = totalNbrSimulations;
