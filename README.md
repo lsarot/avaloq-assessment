@@ -147,4 +147,4 @@ To avoid drawbacks when testing on your part!
 
 - **JdbcSvc** uses java generics to allows us to reuse just one method to retrieve from any ResultSet.
 
-
+- Junit and Mockito libraries to test few methods with mocking.
